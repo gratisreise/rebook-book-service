@@ -1,0 +1,47 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/bookdb
+    username: postgres
+    password: postgres
+    driverClassName: org.postgresql.Driver
+
+  # 1. jpa 설정
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update # (개발: update, 운영: validate 또는 none 권장)
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+  # 2. Redis 설정
+  data:
+    redis:
+      host: localhost
+      port: 6379
+      password: redis123
+
+  # 3. RabbitMQ 설정
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+# 4. Eureka 클라이언트 설정
+eureka:
+  client:
+    service-url:
+      defaultZone: http://localhost:8761/eureka/
+    register-with-eureka: true
+    fetch-registry: true
+  instance:
+    instance-id: ${spring.application.name}:main
+
+# 5. Actuator 및 모니터링
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*" # 개발환경전부 보기
