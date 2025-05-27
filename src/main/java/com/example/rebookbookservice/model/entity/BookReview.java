@@ -55,4 +55,9 @@ public class BookReview {
         this.content = request.getContent();
         this.score = request.getScore();
     }
+
+    public void update(BookReviewRequest request) {
+        this.content = request.getContent();
+        this.score = request.getScore();
+    }
 }

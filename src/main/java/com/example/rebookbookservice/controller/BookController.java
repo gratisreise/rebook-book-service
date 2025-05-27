@@ -9,6 +9,7 @@ import com.example.rebookbookservice.model.entity.Book;
 import com.example.rebookbookservice.model.naver.NaverBooksResponse;
 import com.example.rebookbookservice.service.BookService;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
@@ -33,7 +34,7 @@ public class BookController {
     }
 
     @PostMapping
-    public CommonResult postBook(@RequestBody BookRequest request) {
+    public CommonResult postBook(@Valid @RequestBody BookRequest request) {
         bookService.postBook(request);
         return ResponseService.getSuccessResult();
     }
