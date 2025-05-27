@@ -1,4 +1,4 @@
-package com.example.rebookbookservice.model;
+package com.example.rebookbookservice.common;
 
 import java.util.List;
 import lombok.Getter;

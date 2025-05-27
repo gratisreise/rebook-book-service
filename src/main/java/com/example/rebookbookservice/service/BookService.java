@@ -2,7 +2,7 @@ package com.example.rebookbookservice.service;
 
 import com.example.rebookbookservice.exception.CMissingDataException;
 import com.example.rebookbookservice.model.BookRequest;
-import com.example.rebookbookservice.model.PageResponse;
+import com.example.rebookbookservice.common.PageResponse;
 import com.example.rebookbookservice.model.entity.Book;
 import com.example.rebookbookservice.model.naver.NaverBooksResponse;
 import com.example.rebookbookservice.repository.BookRepository;
@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookService {
     private final BookRepository bookRepository;
     private final ApiService apiService;
+    private final BookReader bookReader;
 
     public NaverBooksResponse searchNaverBooks(String keyword) {
         return apiService.searchBooks(keyword);
@@ -40,8 +41,7 @@ public class BookService {
     }
 
     public Book getBook(Long bookId) {
-        return bookRepository.findById(bookId)
-            .orElseThrow(CMissingDataException::new);
+        return bookReader.readBookById(bookId);
     }
 
 }

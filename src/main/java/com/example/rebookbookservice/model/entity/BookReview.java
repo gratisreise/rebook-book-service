@@ -1,5 +1,6 @@
 package com.example.rebookbookservice.model.entity;
 
+import com.example.rebookbookservice.model.BookReviewRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EntityListeners;
@@ -48,4 +49,10 @@ public class BookReview {
     @LastModifiedDate
     private LocalDateTime updatedAt;
 
+    public BookReview(BookReviewRequest request, Book book, String userId) {
+        this.book = book;
+        this.userId = userId;
+        this.content = request.getContent();
+        this.score = request.getScore();
+    }
 }

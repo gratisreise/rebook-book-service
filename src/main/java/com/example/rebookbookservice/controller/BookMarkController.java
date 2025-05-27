@@ -3,21 +3,17 @@ package com.example.rebookbookservice.controller;
 import com.example.rebookbookservice.common.CommonResult;
 import com.example.rebookbookservice.common.ResponseService;
 import com.example.rebookbookservice.common.SingleResult;
-import com.example.rebookbookservice.model.PageResponse;
+import com.example.rebookbookservice.common.PageResponse;
 import com.example.rebookbookservice.model.entity.Book;
 import com.example.rebookbookservice.service.BookMarkService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
