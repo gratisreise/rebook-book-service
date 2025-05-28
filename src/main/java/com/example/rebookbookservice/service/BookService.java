@@ -1,8 +1,7 @@
 package com.example.rebookbookservice.service;
 
-import com.example.rebookbookservice.exception.CMissingDataException;
-import com.example.rebookbookservice.model.BookRequest;
 import com.example.rebookbookservice.common.PageResponse;
+import com.example.rebookbookservice.model.BookRequest;
 import com.example.rebookbookservice.model.entity.Book;
 import com.example.rebookbookservice.model.naver.NaverBooksResponse;
 import com.example.rebookbookservice.repository.BookRepository;

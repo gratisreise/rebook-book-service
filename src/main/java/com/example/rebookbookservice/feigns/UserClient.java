@@ -1,12 +1,8 @@
 package com.example.rebookbookservice.feigns;
 
 import com.example.rebookbookservice.model.user.AuthorsRequest;
-import com.example.rebookbookservice.model.user.AuthorsResponse;
-import com.example.rebookbookservice.model.user.UserResponse;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 

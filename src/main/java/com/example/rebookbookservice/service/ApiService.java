@@ -3,7 +3,6 @@ package com.example.rebookbookservice.service;
 import com.example.rebookbookservice.feigns.NaverClient;
 import com.example.rebookbookservice.model.naver.NaverBooksResponse;
 import com.google.genai.Client;
-import com.google.genai.types.GenerateContentResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

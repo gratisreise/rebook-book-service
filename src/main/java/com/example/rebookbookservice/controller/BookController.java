@@ -1,14 +1,13 @@
 package com.example.rebookbookservice.controller;
 
 import com.example.rebookbookservice.common.CommonResult;
+import com.example.rebookbookservice.common.PageResponse;
 import com.example.rebookbookservice.common.ResponseService;
 import com.example.rebookbookservice.common.SingleResult;
 import com.example.rebookbookservice.model.BookRequest;
-import com.example.rebookbookservice.common.PageResponse;
 import com.example.rebookbookservice.model.entity.Book;
 import com.example.rebookbookservice.model.naver.NaverBooksResponse;
 import com.example.rebookbookservice.service.BookService;
-
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
