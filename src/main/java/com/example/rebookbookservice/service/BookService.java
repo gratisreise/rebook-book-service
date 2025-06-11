@@ -48,18 +48,11 @@ public class BookService {
         Book postedBook =  bookRepository.save(book);
 
         //알림 메세지 보내기
-        List<String> userIds = userClient.getUserByCategory(category);
         String message = String.format("%s 카테고리에 새로운 도서가 등록되었습니다.", category);
-        userIds.forEach(userId ->{
-            NotificationMessage notificationMessage = new NotificationMessage();
-            notificationMessage.setUserId(userId);
-            notificationMessage.setContent(message);
-            notificationMessage.setType("BOOK");
-            notificationMessage.setRelatedId(postedBook.getId().toString());
-            publisher.sendNotification(notificationMessage);
-        });
+        NotificationMessage notificationMessage = new NotificationMessage();
+        notificationMessage.makeMessage(postedBook.getId(), category);
+        publisher.sendNotification(notificationMessage);
     }
-
 
     public PageResponse<BookResponse> searchBooks(String keyword, Pageable pageable) {
         Page<Book> books = bookRepository.findByTitleContaining(keyword, pageable);

@@ -20,4 +20,11 @@ public class NotificationMessage implements Serializable {
     @NotBlank
     private String relatedId;
 
+
+    public void makeMessage(Long id, String category) {
+        this.userId = "bookIsEmpty";
+        this.content = String.format("%s 카테고리에 새로운 도서가 등록되었습니다.", category);
+        this.type = "BOOK";
+        this.relatedId = String.valueOf(id);
+    }
 }
