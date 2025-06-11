@@ -5,6 +5,7 @@ import com.example.rebookbookservice.exception.CDuplicatedDataException;
 import com.example.rebookbookservice.feigns.UserClient;
 import com.example.rebookbookservice.model.BookRequest;
 import com.example.rebookbookservice.model.BookResponse;
+import com.example.rebookbookservice.model.NotificationMessage;
 import com.example.rebookbookservice.model.entity.Book;
 import com.example.rebookbookservice.model.naver.NaverBooksResponse;
 import com.example.rebookbookservice.repository.BookRepository;
@@ -28,6 +29,7 @@ public class BookService {
     private final ApiService apiService;
     private final BookReader bookReader;
     private final UserClient userClient;
+    private final NotificationPublisher publisher;
 
     public NaverBooksResponse searchNaverBooks(String keyword) {
         return apiService.searchBooks(keyword);
@@ -42,7 +44,20 @@ public class BookService {
         String category = apiService.getCategory(request.getTitle());
         LocalDate publishedDate = LocalDate.parse(request.getPublishedDate(), DateTimeFormatter.BASIC_ISO_DATE);
         Book book = new Book(request, category, publishedDate);
-        bookRepository.save(book);
+
+        Book postedBook =  bookRepository.save(book);
+
+        //알림 메세지 보내기
+        List<String> userIds = userClient.getUserByCategory(category);
+        String message = String.format("%s 카테고리에 새로운 도서가 등록되었습니다.", category);
+        userIds.forEach(userId ->{
+            NotificationMessage notificationMessage = new NotificationMessage();
+            notificationMessage.setUserId(userId);
+            notificationMessage.setContent(message);
+            notificationMessage.setType("BOOK");
+            notificationMessage.setRelatedId(postedBook.getId().toString());
+            publisher.sendNotification(notificationMessage);
+        });
     }
 
 
