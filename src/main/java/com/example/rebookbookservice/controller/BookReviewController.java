@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -31,7 +31,7 @@ public class BookReviewController {
     public CommonResult createReview(
         @PathVariable Long bookId,
         @Valid @RequestBody BookReviewRequest request,
-        @RequestParam String userId
+        @RequestHeader("X-User-Id") String userId
     ){
         bookReviewService.createBookReview(request, bookId, userId);
         return ResponseService.getSuccessResult();
@@ -49,7 +49,7 @@ public class BookReviewController {
     // @RequestHeader("X-User-Id") String userId,
     @DeleteMapping("/reviews/{reviewId}")
     public CommonResult deleteReview(
-        @RequestParam String userId,
+        @RequestHeader("X-User-Id") String userId,
         @PathVariable Long reviewId
     ){
         bookReviewService.deleteBookReview(userId, reviewId);

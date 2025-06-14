@@ -1,4 +1,4 @@
-package com.example.rebookbookservice.service;
+package com.example.rebookbookservice.utils;
 
 
 import com.example.rebookbookservice.model.NotificationMessage;
@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class NotificationPublisher {
+
     private final AmqpTemplate amqpTemplate;
 
     @Value("${notification.exchange}")
@@ -17,8 +18,6 @@ public class NotificationPublisher {
 
     @Value("${notification.routing-key}")
     private String routingKey;
-
-
 
     public void sendNotification(NotificationMessage message) {
         amqpTemplate.convertAndSend(exchange, routingKey, message);

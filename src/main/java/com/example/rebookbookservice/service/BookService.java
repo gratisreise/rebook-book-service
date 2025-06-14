@@ -9,7 +9,7 @@ import com.example.rebookbookservice.model.NotificationMessage;
 import com.example.rebookbookservice.model.entity.Book;
 import com.example.rebookbookservice.model.naver.NaverBooksResponse;
 import com.example.rebookbookservice.repository.BookRepository;
-
+import com.example.rebookbookservice.utils.NotificationPublisher;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
