@@ -7,6 +7,7 @@ import com.example.rebookbookservice.common.SingleResult;
 import com.example.rebookbookservice.model.BookReviewRequest;
 import com.example.rebookbookservice.model.BookReviewResponse;
 import com.example.rebookbookservice.service.BookReviewService;
+import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -28,6 +29,7 @@ public class BookReviewController {
     private final BookReviewService bookReviewService;
 
     @PostMapping("/{bookId}/reviews")
+    @Operation(summary = "도서리뷰등록")
     public CommonResult createReview(
         @PathVariable Long bookId,
         @Valid @RequestBody BookReviewRequest request,
@@ -38,6 +40,7 @@ public class BookReviewController {
     }
 
     @PutMapping("/reviews/{reviewId}")
+    @Operation(summary = "도서리뷰수정")
     public CommonResult updateReview(
         @PathVariable Long reviewId,
         @Valid @RequestBody BookReviewRequest request
@@ -48,6 +51,7 @@ public class BookReviewController {
 
     // @RequestHeader("X-User-Id") String userId,
     @DeleteMapping("/reviews/{reviewId}")
+    @Operation(summary = "도서리뷰삭제")
     public CommonResult deleteReview(
         @RequestHeader("X-User-Id") String userId,
         @PathVariable Long reviewId
@@ -57,6 +61,7 @@ public class BookReviewController {
     }
 
     @GetMapping("/{bookId}/reviews")
+    @Operation(summary = "도서리뷰조회")
     public SingleResult<PageResponse<BookReviewResponse>> getReviews(@PathVariable Long bookId, @PageableDefault Pageable pageable){
         return ResponseService.getSingleResult(bookReviewService.getReviews(bookId, pageable));
     }
