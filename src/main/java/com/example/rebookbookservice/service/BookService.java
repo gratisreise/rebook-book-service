@@ -7,8 +7,10 @@ import com.example.rebookbookservice.model.BookRequest;
 import com.example.rebookbookservice.model.BookResponse;
 import com.example.rebookbookservice.model.NotificationMessage;
 import com.example.rebookbookservice.model.entity.Book;
+import com.example.rebookbookservice.model.entity.compositekey.BookMarkId;
 import com.example.rebookbookservice.model.naver.Item;
 import com.example.rebookbookservice.model.naver.NaverBooksResponse;
+import com.example.rebookbookservice.repository.BookMarkRepository;
 import com.example.rebookbookservice.repository.BookRepository;
 import com.example.rebookbookservice.utils.NotificationPublisher;
 import java.time.LocalDate;
@@ -31,6 +33,7 @@ public class BookService {
     private final BookReader bookReader;
     private final UserClient userClient;
     private final NotificationPublisher publisher;
+    private final BookMarkRepository bookMarkRepository;
 
     public NaverBooksResponse searchNaverBooks(String keyword) {
         NaverBooksResponse response = apiService.searchBooks(keyword);
@@ -67,8 +70,9 @@ public class BookService {
         return new PageResponse<>(response);
     }
 
-    public BookResponse getBook(Long bookId) {
-        return new BookResponse(bookReader.readBookById(bookId));
+    public BookResponse getBook(String userId, Long bookId) {
+        BookResponse response = new BookResponse(bookReader.readBookById(bookId));
+        return checkMarking(response, userId);
     }
 
     public List<Long> getRecommendedBookIds(String userId) {
@@ -79,10 +83,19 @@ public class BookService {
         List<Book> books = bookReader.readBookByCategoryIn(categories);
         return books.stream().map(Book::getId).toList();
     }
+    private BookResponse checkMarking(BookResponse res, String userId){
+        long bookId = res.getBookId();
+        BookMarkId bookMarkId = new BookMarkId(bookId, userId);
+        if(bookMarkRepository.existsByBookMarkId(bookMarkId)){
+            res.setMarked(true);
+        };
+        return res;
+    }
 
-    public PageResponse<BookResponse> getBooks(Pageable pageable) {
+    public PageResponse<BookResponse> getBooks(String userId, Pageable pageable) {
         Page<Book> books = bookRepository.findAll(pageable);
-        Page<BookResponse> response = books.map(BookResponse::new);
-        return new PageResponse<>(response);
+        Page<BookResponse> responses = books.map(BookResponse::new)
+            .map(res -> checkMarking(res, userId));
+        return new PageResponse<>(responses);
     }
 }

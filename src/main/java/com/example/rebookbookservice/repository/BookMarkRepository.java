@@ -16,5 +16,7 @@ public interface BookMarkRepository extends JpaRepository<BookMark, BookMarkId> 
         countQuery = "SELECT COUNT(bm) FROM BookMark bm WHERE bm.bookMarkId.userId = :userId"
     )
     Page<Book> findBooksBookmarkedByUser(String userId, Pageable pageable);
+    boolean existsByBookMarkId(BookMarkId bookMarkId);
 
+    BookMarkId book(Book book);
 }

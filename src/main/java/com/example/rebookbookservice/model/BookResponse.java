@@ -23,6 +23,7 @@ public class BookResponse {
     private String category;
     private float rating;
     private Integer price;
+    private boolean isMarked;
 
     public BookResponse(Book book) {
         this.bookId = book.getId();

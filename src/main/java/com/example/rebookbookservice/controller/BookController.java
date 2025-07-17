@@ -47,11 +47,11 @@ public class BookController {
 
     @GetMapping
     @Operation(summary = "도서조회")
-    public SingleResult<PageResponse<BookResponse>> getBooks(@PageableDefault Pageable pageable){
-        return ResponseService.getSingleResult(bookService.getBooks(pageable));
+    public SingleResult<PageResponse<BookResponse>> getBooks(
+        @RequestHeader("X-User-Id") String userId,
+        @PageableDefault Pageable pageable){
+        return ResponseService.getSingleResult(bookService.getBooks(userId, pageable));
     }
-
-
 
     @GetMapping("/search")
     @Operation(summary = "도서검색")
@@ -62,8 +62,9 @@ public class BookController {
     }
 
     @GetMapping("/{bookId}")
-    public SingleResult<BookResponse> getBook(@PathVariable Long bookId) {
-        return ResponseService.getSingleResult(bookService.getBook(bookId));
+    public SingleResult<BookResponse> getBook(
+        @RequestHeader("X-User-Id") String userId, @PathVariable Long bookId) {
+        return ResponseService.getSingleResult(bookService.getBook(userId, bookId));
     }
 
 

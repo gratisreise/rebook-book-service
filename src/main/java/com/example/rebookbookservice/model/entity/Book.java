@@ -47,7 +47,6 @@ public class Book {
     @Column(nullable = false)
     private float rating;
 
-
     @Column(nullable = false)
     private Integer price;
 
