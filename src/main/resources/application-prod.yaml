@@ -1,5 +1,3 @@
 spring:
-  cloud:
-    config:
-      uri: http://{configprivateip}:8888
-      name: user-service
+  config:
+    import: "optional:configserver:http://172.31.73.161:8888"

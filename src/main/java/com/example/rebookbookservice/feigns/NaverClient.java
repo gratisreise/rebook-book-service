@@ -11,6 +11,7 @@ public interface NaverClient {
     @GetMapping("/v1/search/book.json")
     NaverBooksResponse searchBooks(
         @RequestParam("query") String query,
+        @RequestParam("display") int display,
         @RequestHeader("X-Naver-Client-Id") String clientId,
         @RequestHeader("X-Naver-Client-Secret") String clientSecret
     );

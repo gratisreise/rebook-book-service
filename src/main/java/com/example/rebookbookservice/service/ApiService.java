@@ -24,7 +24,8 @@ public class ApiService {
     private String geminiKey;
 
     public NaverBooksResponse searchBooks(String keyword) {
-        return naverClient.searchBooks(keyword, clientId, clientSecret);
+        final int display = 100;
+        return naverClient.searchBooks(keyword, display, clientId, clientSecret);
     }
 
     public String getCategory(String title){
@@ -32,7 +33,7 @@ public class ApiService {
             client.apiKey();
             String model = "gemini-2.0-flash-lite";
             String text = String.format(
-                "소설, 자기계발, 어린이/청소년, IT/컴퓨터, 예술/문화, 건강/취미 중 %s의 분류는?? 분류명으로 대답\n", title);
+                "소설, 자기계발, 어린이/청소년, IT/컴퓨터, 예술/문화, 경영/경제, 건강/취미 중 %s의 분류는?? 분류명으로 대답\n", title);
             return client.models.generateContent(model, text, null).text().trim();
         } catch(RuntimeException e) {
             log.error("Error occurred while gemini api running");

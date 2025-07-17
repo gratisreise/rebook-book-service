@@ -7,6 +7,7 @@ import com.example.rebookbookservice.model.BookRequest;
 import com.example.rebookbookservice.model.BookResponse;
 import com.example.rebookbookservice.model.NotificationMessage;
 import com.example.rebookbookservice.model.entity.Book;
+import com.example.rebookbookservice.model.naver.Item;
 import com.example.rebookbookservice.model.naver.NaverBooksResponse;
 import com.example.rebookbookservice.repository.BookRepository;
 import com.example.rebookbookservice.utils.NotificationPublisher;
@@ -32,11 +33,17 @@ public class BookService {
     private final NotificationPublisher publisher;
 
     public NaverBooksResponse searchNaverBooks(String keyword) {
-        return apiService.searchBooks(keyword);
+        NaverBooksResponse response = apiService.searchBooks(keyword);
+        List<Item> filteredItems = response.getItems().stream()
+            .filter(item -> !bookRepository.existsByIsbn(item.getIsbn()))
+            .toList();
+        response.setItems(filteredItems);
+        return response;
     }
 
     @Transactional
     public void postBook(BookRequest request) {
+        log.info("request {}", request.toString());
         if(bookRepository.existsByIsbn(request.getIsbn())){
             log.info("Book already exists");
             throw new CDuplicatedDataException("Duplicate BookInfo");
@@ -65,9 +72,17 @@ public class BookService {
     }
 
     public List<Long> getRecommendedBookIds(String userId) {
+        log.info("before client");
         List<String> categories = userClient.getFavoriteCategories(userId);
+        log.info("after client");
         log.info("getRecommendedBookIds categories: {}", categories.toString());
         List<Book> books = bookReader.readBookByCategoryIn(categories);
         return books.stream().map(Book::getId).toList();
+    }
+
+    public PageResponse<BookResponse> getBooks(Pageable pageable) {
+        Page<Book> books = bookRepository.findAll(pageable);
+        Page<BookResponse> response = books.map(BookResponse::new);
+        return new PageResponse<>(response);
     }
 }

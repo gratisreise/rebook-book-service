@@ -12,4 +12,7 @@ public class NaverBooksResponse {
     private int start;
     private int display;
     private List<Item> items;
+
+
+
 }

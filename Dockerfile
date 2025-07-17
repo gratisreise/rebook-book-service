@@ -1,4 +1,4 @@
-# 푸쉬: docker buildx build --platform=linux/amd64,linux/arm64 -t nooaahh/rebook-book-service --push .
+# 푸쉬: docker buildx build --platform=linux/amd64 -t nooaahh/rebook-book-service --push .
 # 생성: docker build -t nooaahh/rebook-book-service:latest .
 
 # 1. 빌드 환경

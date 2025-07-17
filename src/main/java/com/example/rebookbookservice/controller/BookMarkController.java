@@ -7,6 +7,7 @@ import com.example.rebookbookservice.common.SingleResult;
 import com.example.rebookbookservice.model.entity.Book;
 import com.example.rebookbookservice.service.BookMarkService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
+@Tag(name="찜")
 public class BookMarkController {
     private final BookMarkService bookMarkService;
 

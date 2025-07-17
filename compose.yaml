@@ -1,0 +1,7 @@
+services:
+  rebook-book:
+    image: nooaahh/rebook-book-service
+    container_name: rebook-book
+    restart: unless-stopped
+    ports:
+      - "9001:9001"

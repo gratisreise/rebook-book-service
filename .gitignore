@@ -35,3 +35,7 @@ out/
 
 ### VS Code ###
 .vscode/
+
+GEMINI.md
+CLAUDE.md
+rebook-book-service-api.postman_collection.json

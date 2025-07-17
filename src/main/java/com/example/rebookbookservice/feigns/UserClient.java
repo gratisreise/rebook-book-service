@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name="user-service", url="user-service")
+@FeignClient(name="user-service")
 public interface UserClient {
     //유저 닉네임 가져오기
     @PostMapping("/api/users/authors")

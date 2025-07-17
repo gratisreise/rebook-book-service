@@ -10,8 +10,7 @@ public class Item {
     private String link;
     private String author;
     private String image;
-    private String price;
-    private int discount;
+    private String discount;
     private String publisher;
     private String pubdate;
     private String isbn;

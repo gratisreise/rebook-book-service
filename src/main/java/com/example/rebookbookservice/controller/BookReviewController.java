@@ -8,6 +8,7 @@ import com.example.rebookbookservice.model.BookReviewRequest;
 import com.example.rebookbookservice.model.BookReviewResponse;
 import com.example.rebookbookservice.service.BookReviewService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/books")
 @RequiredArgsConstructor
+@Tag(name="도서리뷰")
 public class BookReviewController {
     private final BookReviewService bookReviewService;
 

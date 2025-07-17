@@ -30,6 +30,7 @@ public class BookReviewService {
 
     @Transactional
     public void createBookReview(BookReviewRequest request, Long bookId, String userId) {
+
         if(bookReviewRepository.existsByBookIdAndUserId(bookId, userId)){
             throw new CDuplicatedDataException("BookReview already exist");
         }

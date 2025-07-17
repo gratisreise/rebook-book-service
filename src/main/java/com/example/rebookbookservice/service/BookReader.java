@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class BookReader {
     private final BookRepository bookRepository;
 
+
     public Book readBookById(Long bookId) {
         return bookRepository.findById(bookId)
             .orElseThrow(CMissingDataException::new);
@@ -34,5 +35,8 @@ public class BookReader {
         log.info("books: {} ", bookList.toString());
         log.info("books count: {}", books.getContent());
         return bookList;
+    }
+    public boolean existsByIsbn(String isbn){
+        return bookRepository.existsByIsbn(isbn);
     }
 }

@@ -45,11 +45,18 @@ public class BookController {
         return ResponseService.getSuccessResult();
     }
 
+    @GetMapping
+    @Operation(summary = "도서조회")
+    public SingleResult<PageResponse<BookResponse>> getBooks(@PageableDefault Pageable pageable){
+        return ResponseService.getSingleResult(bookService.getBooks(pageable));
+    }
+
+
+
     @GetMapping("/search")
     @Operation(summary = "도서검색")
     public SingleResult<PageResponse<BookResponse>> search(
-        @RequestParam String keyword,
-        @PageableDefault(sort = "id", direction = Direction.ASC) Pageable pageable
+        @RequestParam String keyword, @PageableDefault Pageable pageable
     ) {
         return ResponseService.getSingleResult(bookService.searchBooks(keyword, pageable));
     }
@@ -61,9 +68,14 @@ public class BookController {
 
 
     @GetMapping("/recommendations")
+    @Operation(summary = "추천도서조회")
     public List<Long> recommendations(@RequestHeader("X-User-Id") String userId) {
         return bookService.getRecommendedBookIds(userId);
     }
 
-
+    //거래서비스 호출용
+    @GetMapping("/recommendations/{userId}")
+    public List<Long> recommendedBookIds(@PathVariable String userId) {
+        return bookService.getRecommendedBookIds(userId);
+    }
 }
