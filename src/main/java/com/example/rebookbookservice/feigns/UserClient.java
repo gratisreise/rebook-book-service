@@ -1,6 +1,5 @@
 package com.example.rebookbookservice.feigns;
 
-import com.example.rebookbookservice.common.PageResponse;
 import com.example.rebookbookservice.model.user.AuthorsRequest;
 import java.util.List;
 import org.springframework.cloud.openfeign.FeignClient;
