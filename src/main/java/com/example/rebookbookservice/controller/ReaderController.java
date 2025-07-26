@@ -17,4 +17,6 @@ public class ReaderController {
     public List<String> getUserIdsByBookId(@PathVariable Long bookId){
         return bookReader.getUserIdsByBookId(bookId);
     }
+
+
 }

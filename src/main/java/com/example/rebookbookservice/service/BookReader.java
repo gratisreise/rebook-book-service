@@ -43,4 +43,5 @@ public class BookReader {
     public List<String> getUserIdsByBookId(Long bookId) {
         return bookMarkRepository.findUserIdsByBookId(bookId);
     }
+
 }

@@ -100,4 +100,9 @@ public class BookService {
     }
 
 
+    public List<BookResponse> getRecommendedBooks(String userId) {
+        List<String> categories = userClient.getFavoriteCategories(userId);
+        List<Book> books = bookRepository.findTop5ByCategoryIn(categories);
+        return books.stream().map(BookResponse::new).toList();
+    }
 }

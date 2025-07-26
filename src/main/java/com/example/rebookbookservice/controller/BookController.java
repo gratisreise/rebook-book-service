@@ -1,6 +1,7 @@
 package com.example.rebookbookservice.controller;
 
 import com.example.rebookbookservice.common.CommonResult;
+import com.example.rebookbookservice.common.ListResult;
 import com.example.rebookbookservice.common.PageResponse;
 import com.example.rebookbookservice.common.ResponseService;
 import com.example.rebookbookservice.common.SingleResult;
@@ -67,11 +68,16 @@ public class BookController {
     }
 
 
+
+
     @GetMapping("/recommendations")
     @Operation(summary = "추천도서조회")
-    public List<Long> recommendations(@RequestHeader("X-User-Id") String userId) {
-        return bookService.getRecommendedBookIds(userId);
+    public ListResult<BookResponse> recommendations(
+        @RequestHeader("X-User-Id") String userId) {
+        return ResponseService.getListResult(bookService.getRecommendedBooks(userId));
     }
+
+
 
     //거래서비스 호출용
     @GetMapping("/recommendations/{userId}")
