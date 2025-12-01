@@ -8,7 +8,9 @@ import com.example.rebookbookservice.common.SingleResult;
 import com.example.rebookbookservice.model.BookRequest;
 import com.example.rebookbookservice.model.BookResponse;
 import com.example.rebookbookservice.model.naver.NaverBooksResponse;
+import com.example.rebookbookservice.passport.PassportUser;
 import com.example.rebookbookservice.service.BookService;
+import com.rebook.passport.PassportProto.Passport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
@@ -31,6 +33,11 @@ import org.springframework.web.bind.annotation.RestController;
 @Tag(name="도서")
 public class BookController {
     private final BookService bookService;
+
+    @GetMapping("/test")
+    public String test(@PassportUser Passport passport){
+        return passport.toString();
+    }
 
     @GetMapping("/external/search")
     @Operation(summary = "네이버 Api 도서 검색")

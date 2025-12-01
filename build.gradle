@@ -7,7 +7,7 @@ plugins {
 }
 
 group = 'com.book-service' // 프로젝트 그룹(패키지 네임)
-version = '0.0.1-SNAPSHOT' // 프로젝트 버전
+version = '0.0.1' // 프로젝트 버전
 
 java {
     toolchain {
@@ -58,15 +58,15 @@ dependencies {
     implementation 'org.springframework.cloud:spring-cloud-starter-netflix-eureka-client' // Eureka 서비스 디스커버리 클라이언트
     implementation 'org.springframework.cloud:spring-cloud-starter-openfeign' // OpenFeign (HTTP 클라이언트)
 
-// ===== 캐싱 ====
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
 // ===== s3 ====
     implementation platform('software.amazon.awssdk:bom:2.27.21') // 최신 버전은 Maven Central에서 확인
     implementation 'software.amazon.awssdk:s3'
 
 // ===== gemini ====
     implementation 'com.google.genai:google-genai:1.0.0'
+
+    //공통라이브러리
+    implementation "com.rebook:passport-common:1.0.0"
 
 // ====== 개발 편의성 ======
     compileOnly 'org.projectlombok:lombok' // Lombok (컴파일 시에만 필요)
@@ -98,5 +98,20 @@ jacocoTestReport {
         html.required = true // HTML 리포트 생성
         xml.required = false
         csv.required = false
+    }
+}
+repositories {
+    mavenCentral()
+    maven {
+        name = "GitHubPackages"
+        url = uri("https://maven.pkg.github.com/gratisreise/passport-common")
+        credentials {
+            username = System.getenv("GITHUB_ACTOR")
+            password = System.getenv("GITHUB_TOKEN")
+        }
+    }
+    mavenLocal()
+    flatDir {
+        dirs "libs"
     }
 }
