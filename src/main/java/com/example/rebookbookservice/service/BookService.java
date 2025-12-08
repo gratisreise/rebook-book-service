@@ -6,13 +6,17 @@ import com.example.rebookbookservice.feigns.UserClient;
 import com.example.rebookbookservice.model.BookRequest;
 import com.example.rebookbookservice.model.BookResponse;
 import com.example.rebookbookservice.model.entity.Book;
+import com.example.rebookbookservice.model.entity.Outbox;
 import com.example.rebookbookservice.model.entity.compositekey.BookMarkId;
 import com.example.rebookbookservice.model.message.NotificationBookMessage;
 import com.example.rebookbookservice.model.naver.Item;
 import com.example.rebookbookservice.model.naver.NaverBooksResponse;
 import com.example.rebookbookservice.repository.BookMarkRepository;
 import com.example.rebookbookservice.repository.BookRepository;
+import com.example.rebookbookservice.repository.OutBoxRepository;
 import com.example.rebookbookservice.utils.NotificationPublisher;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -32,8 +36,9 @@ public class BookService {
     private final ApiService apiService;
     private final BookReader bookReader;
     private final UserClient userClient;
-    private final NotificationPublisher publisher;
     private final BookMarkRepository bookMarkRepository;
+    private final ObjectMapper objectMapper;
+    private final OutBoxRepository outBoxRepository;
 
     public NaverBooksResponse searchNaverBooks(String keyword) {
         NaverBooksResponse response = apiService.searchBooks(keyword);
@@ -45,23 +50,31 @@ public class BookService {
     }
 
     @Transactional
-    public void postBook(BookRequest request) {
+    public void postBook(BookRequest request) throws JsonProcessingException {
         log.info("request {}", request.toString());
         if(bookRepository.existsByIsbn(request.getIsbn())){
             log.info("Book already exists");
             throw new CDuplicatedDataException("Duplicate BookInfo");
         }
+
         String category = apiService.getCategory(request.getTitle());
         LocalDate publishedDate = LocalDate.parse(request.getPublishedDate(), DateTimeFormatter.BASIC_ISO_DATE);
         Book book = new Book(request, category, publishedDate);
 
         Book postedBook =  bookRepository.save(book);
 
-        //알림 메세지 보내기
+        //outbox 저장
+        saveOutBox(category, postedBook);
+    }
+
+    private void saveOutBox(String category, Book postedBook) throws JsonProcessingException {
         String message = String.format("%s 카테고리에 새로운 도서가 등록되었습니다.", category);
         NotificationBookMessage notificationBookMessage =
             new NotificationBookMessage(postedBook.getId(), category, message);
-        publisher.sendNotification(notificationBookMessage);
+        String payload  = objectMapper.writeValueAsString(notificationBookMessage);
+        Outbox outBox = new Outbox();
+        outBox.setPayload(payload);
+        outBoxRepository.save(outBox);
     }
 
     public PageResponse<BookResponse> searchBooks(String keyword, Pageable pageable) {

@@ -31,7 +31,7 @@ public class ApiService {
     public String getCategory(String title){
         try (Client client = Client.builder().apiKey(geminiKey).build();){
             client.apiKey();
-            String model = "gemini-2.0-flash-lite";
+            String model = "gemini-2.5-flash-lite";
             String text = String.format(
                 "소설, 자기계발, 어린이/청소년, IT/컴퓨터, 예술/문화, 경영/경제, 건강/취미 중 %s의 분류는?? 분류명으로 대답\n", title);
             return client.models.generateContent(model, text, null).text().trim();

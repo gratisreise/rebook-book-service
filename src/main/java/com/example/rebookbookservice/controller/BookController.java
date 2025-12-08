@@ -10,6 +10,7 @@ import com.example.rebookbookservice.model.BookResponse;
 import com.example.rebookbookservice.model.naver.NaverBooksResponse;
 import com.example.rebookbookservice.passport.PassportUser;
 import com.example.rebookbookservice.service.BookService;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.rebook.passport.PassportProto.Passport;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -47,7 +48,8 @@ public class BookController {
 
     @PostMapping
     @Operation(summary = "도서등록")
-    public CommonResult postBook(@Valid @RequestBody BookRequest request) {
+    public CommonResult postBook(@Valid @RequestBody BookRequest request)
+        throws JsonProcessingException {
         bookService.postBook(request);
         return ResponseService.getSuccessResult();
     }
