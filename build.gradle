@@ -6,7 +6,7 @@ plugins {
     id 'jacoco'
 }
 
-group = 'com.book-service' // 프로젝트 그룹(패키지 네임)
+group = 'com.book' // 프로젝트 그룹(패키지 네임)
 version = '0.0.1' // 프로젝트 버전
 
 java {
@@ -20,7 +20,7 @@ configurations.configureEach {
 
 configurations {
     compileOnly {
-        extendsFrom annotationProcessor // annotationProcessor도 compileOnly에 포함
+        extendsFrom annotationProcessor
     }
 }
 
@@ -44,7 +44,6 @@ dependencies {
 // ====== 웹 및 REST API ======
     implementation 'org.springframework.boot:spring-boot-starter-web' // 웹 MVC (REST API)
     implementation 'org.springframework.boot:spring-boot-starter-validation' // Bean Validation
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.6.0'
 
 // ====== 데이터베이스 및 JPA ======
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA (DB 연동)
