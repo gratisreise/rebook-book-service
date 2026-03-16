@@ -1,8 +1,8 @@
 package com.example.rebookbookservice.external.rabbitmq;
 
-import com.example.rebookbookservice.domain.book.model.NotificationBookMessage;
-import com.example.rebookbookservice.domain.outbox.model.entity.Outbox;
-import com.example.rebookbookservice.domain.outbox.repository.OutBoxRepository;
+import com.example.rebookbookservice.external.rabbitmq.message.NotificationBookMessage;
+import com.example.rebookbookservice.domain.outbox.Outbox;
+import com.example.rebookbookservice.domain.outbox.OutBoxRepository;
 import com.example.rebookbookservice.common.enums.MessageStatus;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
@@ -33,7 +33,6 @@ public class NotificationPublisher {
     @Transactional
     @Scheduled(fixedDelay = 2000)
     public void processOutbox() {
-        log.info("스케줄 실행!!");
 
         List<Outbox> pendingEvents =
             outboxRepository.findTop20ByStatusOrderByCreatedAtAsc(MessageStatus.PENDING);

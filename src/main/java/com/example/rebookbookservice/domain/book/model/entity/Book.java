@@ -1,20 +1,28 @@
 package com.example.rebookbookservice.domain.book.model.entity;
 
-import com.example.rebookbookservice.domain.book.model.BookRequest;
+import com.example.rebookbookservice.common.enums.Category;
+import com.example.rebookbookservice.domain.book.model.dto.request.BookRequest;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import java.time.LocalDate;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @Entity
 @Getter
 @Setter
 @NoArgsConstructor
+@Builder
+@AllArgsConstructor
 public class Book {
 
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,26 +49,15 @@ public class Book {
     @Column(nullable = false, length = 400)
     private String cover;
 
-    @Column(nullable = false, length = 10)
-    private String category;
+    @Column(nullable = false, length = 20) // 한글은 UTF-8 기준 바이트 수가 크므로 길이를 넉넉히 잡는 게 좋습니다.
+    @Enumerated(EnumType.STRING) // 숫자가 아닌 문자열(상수명) 그대로 DB에 저장
+    private Category category;
 
     @Column(nullable = false)
     private float rating;
 
     @Column(nullable = false)
     private Integer price;
-
-    public Book(BookRequest request, String category, LocalDate publishedDate) {
-        this.title = request.title();
-        this.author = request.author();
-        this.publisher = request.publisher();
-        this.publishedDate = publishedDate;
-        this.isbn = request.isbn();
-        this.description = request.description();
-        this.cover = request.cover();
-        this.category = category;
-        this.price = request.price() != null ? request.price() : 0;
-    }
 
     public Book(long bookId){
         this.id = bookId;
