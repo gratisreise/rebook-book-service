@@ -1,9 +1,9 @@
 package com.example.rebookbookservice.domain.book.service.reader;
 
-import com.example.rebookbookservice.domain.book.model.entity.Book;
-import com.example.rebookbookservice.domain.book.repository.BookRepository;
-import com.example.rebookbookservice.domain.book.repository.BookMarkRepository;
 import com.example.rebookbookservice.common.exception.BookException;
+import com.example.rebookbookservice.domain.book.model.entity.Book;
+import com.example.rebookbookservice.domain.book.repository.BookMarkRepository;
+import com.example.rebookbookservice.domain.book.repository.BookRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -18,29 +18,28 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(readOnly = true)
 @Slf4j
 public class BookReader {
-    private final BookRepository bookRepository;
-    private final BookMarkRepository bookMarkRepository;
+  private final BookRepository bookRepository;
+  private final BookMarkRepository bookMarkRepository;
 
-    public Book readBookById(Long bookId) {
-        return bookRepository.findById(bookId)
-            .orElseThrow(BookException::new);
-    }
+  public Book readBookById(Long bookId) {
+    return bookRepository.findById(bookId).orElseThrow(BookException::new);
+  }
 
-    public List<Book> readBookByCategoryIn(List<String> categories) {
-        Pageable pageable = PageRequest.of(0, 10);
-        log.info("Reading books by category: {}", categories);
-        Page<Book> books = bookRepository.findByCategoryIn(categories, pageable);
-        List<Book> bookList = bookRepository.findByCategoryIn(categories);
-        log.info("books: {} ", bookList.toString());
-        log.info("books count: {}", books.getContent());
-        return bookList;
-    }
+  public List<Book> readBookByCategoryIn(List<String> categories) {
+    Pageable pageable = PageRequest.of(0, 10);
+    log.info("Reading books by category: {}", categories);
+    Page<Book> books = bookRepository.findByCategoryIn(categories, pageable);
+    List<Book> bookList = bookRepository.findByCategoryIn(categories);
+    log.info("books: {} ", bookList.toString());
+    log.info("books count: {}", books.getContent());
+    return bookList;
+  }
 
-    public boolean existsByIsbn(String isbn){
-        return bookRepository.existsByIsbn(isbn);
-    }
+  public boolean existsByIsbn(String isbn) {
+    return bookRepository.existsByIsbn(isbn);
+  }
 
-    public List<String> getUserIdsByBookId(Long bookId) {
-        return bookMarkRepository.findUserIdsByBookId(bookId);
-    }
+  public List<String> getUserIdsByBookId(Long bookId) {
+    return bookMarkRepository.findUserIdsByBookId(bookId);
+  }
 }

@@ -12,14 +12,13 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface BookMarkRepository extends JpaRepository<BookMark, BookMarkId> {
-    @Query(
-        value = "SELECT bm.book FROM BookMark bm WHERE bm.bookMarkId.userId = :userId",
-        countQuery = "SELECT COUNT(bm) FROM BookMark bm WHERE bm.bookMarkId.userId = :userId"
-    )
-    Page<Book> findBooksBookmarkedByUser(String userId, Pageable pageable);
-    boolean existsByBookMarkId(BookMarkId bookMarkId);
+  @Query(
+      value = "SELECT bm.book FROM BookMark bm WHERE bm.bookMarkId.userId = :userId",
+      countQuery = "SELECT COUNT(bm) FROM BookMark bm WHERE bm.bookMarkId.userId = :userId")
+  Page<Book> findBooksBookmarkedByUser(String userId, Pageable pageable);
 
-    @Query("SELECT bm.bookMarkId.userId FROM BookMark bm WHERE bm.bookMarkId.bookId = :bookId")
-    List<String> findUserIdsByBookId(Long bookId);
+  boolean existsByBookMarkId(BookMarkId bookMarkId);
 
+  @Query("SELECT bm.bookMarkId.userId FROM BookMark bm WHERE bm.bookMarkId.bookId = :bookId")
+  List<String> findUserIdsByBookId(Long bookId);
 }

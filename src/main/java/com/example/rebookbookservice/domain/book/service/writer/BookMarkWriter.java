@@ -13,15 +13,15 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional
 public class BookMarkWriter {
-    private final BookMarkRepository bookMarkRepository;
-    private final BookMarkReader bookMarkReader;
+  private final BookMarkRepository bookMarkRepository;
+  private final BookMarkReader bookMarkReader;
 
-    public void markingToggle(String userId, Long bookId) {
-        BookMarkId bookMarkId = new BookMarkId(bookId, userId);
-        if (bookMarkReader.existsById(bookMarkId)) {
-            bookMarkRepository.deleteById(bookMarkId);
-        } else {
-            bookMarkRepository.save(new BookMark(bookMarkId, new Book(bookId)));
-        }
+  public void markingToggle(String userId, Long bookId) {
+    BookMarkId bookMarkId = new BookMarkId(bookId, userId);
+    if (bookMarkReader.existsById(bookMarkId)) {
+      bookMarkRepository.deleteById(bookMarkId);
+    } else {
+      bookMarkRepository.save(new BookMark(bookMarkId, new Book(bookId)));
     }
+  }
 }

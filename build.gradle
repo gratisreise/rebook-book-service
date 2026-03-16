@@ -3,6 +3,7 @@ plugins {
     id 'java'
     id 'org.springframework.boot' version "${springBootVersion}"
     id 'io.spring.dependency-management' version "${springDependencyManagementVersion}"
+    id 'com.diffplug.spotless' version "${spotlessVersion}"
     id 'jacoco'
 }
 
@@ -82,6 +83,12 @@ dependencyManagement {
     }
 }
 
+tasks.named('build') {
+    dependsOn 'spotlessApply'
+}
+
+
+
 tasks.named('test') {
     useJUnitPlatform()
     finalizedBy 'jacocoTestReport' // 테스트 후 리포트 생성
@@ -100,6 +107,19 @@ repositories {
     mavenLocal()
     flatDir {
         dirs "libs"
+    }
+}
+spotless {
+    java {
+        target 'src/**/*.java'
+
+        googleJavaFormat('1.17.0')
+
+        importOrder()
+        removeUnusedImports()
+
+        trimTrailingWhitespace()
+        endWithNewline()
     }
 }
 

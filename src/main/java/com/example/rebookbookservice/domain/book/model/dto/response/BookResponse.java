@@ -2,7 +2,9 @@ package com.example.rebookbookservice.domain.book.model.dto.response;
 
 import com.example.rebookbookservice.domain.book.model.entity.Book;
 import java.time.LocalDate;
+import lombok.Builder;
 
+@Builder(toBuilder = true)
 public record BookResponse(
     Long bookId,
     String title,
@@ -15,39 +17,25 @@ public record BookResponse(
     String category,
     float rating,
     Integer price,
-    boolean isMarked
-) {
-    public BookResponse(Book book) {
-        this(
-            book.getId(),
-            book.getTitle(),
-            book.getAuthor(),
-            book.getPublisher(),
-            book.getIsbn(),
-            book.getDescription(),
-            book.getPublishedDate(),
-            book.getCover(),
-            book.getCategory().name(),
-            book.getRating(),
-            book.getPrice(),
-            false
-        );
-    }
+    boolean isMarked) {
+  public static BookResponse from(Book book) {
+    return BookResponse.builder()
+        .bookId(book.getId())
+        .title(book.getTitle())
+        .author(book.getAuthor())
+        .publisher(book.getPublisher())
+        .isbn(book.getIsbn())
+        .description(book.getDescription())
+        .publishedDate(book.getPublishedDate())
+        .cover(book.getCover())
+        .category(book.getCategory().name())
+        .rating(book.getRating())
+        .price(book.getPrice())
+        .isMarked(false)
+        .build();
+  }
 
-    public BookResponse withMarked(boolean marked) {
-        return new BookResponse(
-            this.bookId,
-            this.title,
-            this.author,
-            this.publisher,
-            this.isbn,
-            this.description,
-            this.publishedDate,
-            this.cover,
-            this.category,
-            this.rating,
-            this.price,
-            marked
-        );
-    }
+  public BookResponse withMarked(boolean marked) {
+    return this.toBuilder().isMarked(marked).build();
+  }
 }

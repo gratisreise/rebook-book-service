@@ -10,10 +10,10 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BookReviewRepository extends JpaRepository<BookReview, Long> {
 
-    boolean existsByBookIdAndUserId(Long booId, String userId);
+  boolean existsByBookIdAndUserId(Long booId, String userId);
 
-    Page<BookReview> findByBookId(Long bookId, Pageable pageable);
+  Page<BookReview> findByBookId(Long bookId, Pageable pageable);
 
-    @Query("SELECT COALESCE(AVG(br.score), 0) FROM BookReview br WHERE br.book.id = :bookId")
-    Float findAverageScoreByBookId(Long bookId);
+  @Query("SELECT COALESCE(AVG(br.score), 0) FROM BookReview br WHERE br.book.id = :bookId")
+  Float findAverageScoreByBookId(Long bookId);
 }

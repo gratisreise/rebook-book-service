@@ -19,11 +19,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @AllArgsConstructor
 public class BookMark implements Serializable {
-    @EmbeddedId
-    BookMarkId bookMarkId;
+  @EmbeddedId BookMarkId bookMarkId;
 
-    @MapsId("bookId")
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "book_id")
-    private Book book;
+  @MapsId("bookId")
+  @ManyToOne(fetch = FetchType.LAZY)
+  @JoinColumn(name = "book_id")
+  private Book book;
 }

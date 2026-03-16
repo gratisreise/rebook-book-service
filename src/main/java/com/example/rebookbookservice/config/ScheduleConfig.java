@@ -3,6 +3,4 @@ package com.example.rebookbookservice.config;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 @EnableScheduling
-public class ScheduleConfig {
-
-}
+public class ScheduleConfig {}

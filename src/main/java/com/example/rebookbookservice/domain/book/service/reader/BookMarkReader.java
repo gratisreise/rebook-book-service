@@ -13,17 +13,17 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 @Transactional(readOnly = true)
 public class BookMarkReader {
-    private final BookMarkRepository bookMarkRepository;
+  private final BookMarkRepository bookMarkRepository;
 
-    public boolean existsByBookMarkId(BookMarkId bookMarkId) {
-        return bookMarkRepository.existsByBookMarkId(bookMarkId);
-    }
+  public boolean existsByBookMarkId(BookMarkId bookMarkId) {
+    return bookMarkRepository.existsByBookMarkId(bookMarkId);
+  }
 
-    public Page<Book> getMarkedBooks(String userId, Pageable pageable) {
-        return bookMarkRepository.findBooksBookmarkedByUser(userId, pageable);
-    }
+  public Page<Book> getMarkedBooks(String userId, Pageable pageable) {
+    return bookMarkRepository.findBooksBookmarkedByUser(userId, pageable);
+  }
 
-    public boolean existsById(BookMarkId bookMarkId) {
-        return bookMarkRepository.existsById(bookMarkId);
-    }
+  public boolean existsById(BookMarkId bookMarkId) {
+    return bookMarkRepository.existsById(bookMarkId);
+  }
 }

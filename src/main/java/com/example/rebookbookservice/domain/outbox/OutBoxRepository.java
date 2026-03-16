@@ -8,5 +8,5 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OutBoxRepository extends JpaRepository<Outbox, Long> {
 
-    List<Outbox> findTop20ByStatusOrderByCreatedAtAsc(MessageStatus messageStatus);
+  List<Outbox> findTop20ByStatusOrderByCreatedAtAsc(MessageStatus messageStatus);
 }

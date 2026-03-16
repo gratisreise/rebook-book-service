@@ -22,25 +22,25 @@ import lombok.Setter;
 @AllArgsConstructor
 public class Outbox {
 
-    @Id  @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+  @Id
+  @GeneratedValue(strategy = GenerationType.IDENTITY)
+  private Long id;
 
-    @Lob
-    private String payload;
+  @Lob private String payload;
 
-    @Enumerated(value= EnumType.STRING)
-    private MessageStatus status;
+  @Enumerated(value = EnumType.STRING)
+  private MessageStatus status;
 
-    private LocalDateTime createdAt;
-    private LocalDateTime processedAt;
+  private LocalDateTime createdAt;
+  private LocalDateTime processedAt;
 
-    @PrePersist
-    public void prePersist() {
-        if (createdAt == null) {
-            this.createdAt = LocalDateTime.now();
-        }
-        if (status == null) {
-            this.status = MessageStatus.PENDING;
-        }
+  @PrePersist
+  public void prePersist() {
+    if (createdAt == null) {
+      this.createdAt = LocalDateTime.now();
     }
+    if (status == null) {
+      this.status = MessageStatus.PENDING;
+    }
+  }
 }

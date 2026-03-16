@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class GeminiConfig {
 
-    @Bean
-    public Client geminiClient() {
-        return Client.builder().apiKey(System.getenv("GEMINI_API_KEY")).build();
-    }
+  @Bean
+  public Client geminiClient() {
+    return Client.builder().apiKey(System.getenv("GEMINI_API_KEY")).build();
+  }
 }

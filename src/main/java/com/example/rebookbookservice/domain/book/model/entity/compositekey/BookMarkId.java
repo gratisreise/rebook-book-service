@@ -15,6 +15,6 @@ import lombok.Setter;
 @AllArgsConstructor
 @EqualsAndHashCode
 public class BookMarkId implements Serializable {
-    private Long bookId;
-    private String userId;
+  private Long bookId;
+  private String userId;
 }
