@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(name = "user-service")
 public interface UserClient {
-  @PostMapping("/api/users/authors")
+  @PostMapping("/internal/users/authors")
   List<String> getUser(@RequestBody AuthorsRequest request);
 
   @GetMapping("/api/users/categories/recommendations/{userId}")

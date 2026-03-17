@@ -78,11 +78,6 @@ public class BookController {
     return SuccessResponse.toOk(bookService.getRecommendedBooks(userId));
   }
 
-  @GetMapping("/recommendations/{userId}")
-  public List<Long> recommendedBookIds(@PathVariable String userId) {
-    return bookService.getRecommendedBookIds(userId);
-  }
-
   // === BookMark APIs ===
 
   @PostMapping("/{bookId}/marks")
@@ -129,12 +124,5 @@ public class BookController {
   public ResponseEntity<SuccessResponse<PageResponse<BookReviewResponse>>> getReviews(
       @PathVariable Long bookId, @PageableDefault Pageable pageable) {
     return SuccessResponse.toOk(bookService.getReviews(bookId, pageable));
-  }
-
-  // === Alarm APIs ===
-
-  @GetMapping("/alarms/books/{bookId}")
-  public List<String> getUserIdsByBookId(@PathVariable Long bookId) {
-    return bookService.getUserIdsByBookId(bookId);
   }
 }
