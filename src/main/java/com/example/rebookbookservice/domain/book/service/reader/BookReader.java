@@ -5,6 +5,7 @@ import com.example.rebookbookservice.domain.book.model.entity.Book;
 import com.example.rebookbookservice.domain.book.repository.BookMarkRepository;
 import com.example.rebookbookservice.domain.book.repository.BookRepository;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -37,6 +38,10 @@ public class BookReader {
 
   public boolean existsByIsbn(String isbn) {
     return bookRepository.existsByIsbn(isbn);
+  }
+
+  public Optional<Book> findByIsbn(String isbn) {
+    return bookRepository.findByIsbn(isbn);
   }
 
   public List<String> getUserIdsByBookId(Long bookId) {

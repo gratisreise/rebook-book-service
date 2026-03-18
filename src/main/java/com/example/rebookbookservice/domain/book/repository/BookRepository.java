@@ -2,6 +2,7 @@ package com.example.rebookbookservice.domain.book.repository;
 
 import com.example.rebookbookservice.domain.book.model.entity.Book;
 import java.util.List;
+import java.util.Optional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -16,6 +17,8 @@ public interface BookRepository extends JpaRepository<Book, Long> {
   List<Book> findByCategoryIn(List<String> categories);
 
   boolean existsByIsbn(String isbn);
+
+  Optional<Book> findByIsbn(String isbn);
 
   List<Book> findTop5ByCategoryIn(List<String> categories);
 }
