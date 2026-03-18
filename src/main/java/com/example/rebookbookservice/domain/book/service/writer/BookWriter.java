@@ -46,6 +46,22 @@ public class BookWriter {
     return postedBook;
   }
 
+  public Book saveBookFromNaver(BookRequest request) throws JsonProcessingException {
+    if (bookRepository.existsByIsbn(request.isbn())) {
+      return bookRepository.findByIsbn(request.isbn()).orElseThrow(BookException::new);
+    }
+
+    String categoryName = aiService.getCategory(request.title());
+    Category category = Category.fromName(categoryName);
+    LocalDate publishedDate =
+        LocalDate.parse(request.publishedDate(), DateTimeFormatter.BASIC_ISO_DATE);
+    Book book = request.toEntity(category, publishedDate);
+
+    Book postedBook = bookRepository.save(book);
+    saveOutBox(categoryName, postedBook);
+    return postedBook;
+  }
+
   public void updateBookRating(Book book, float rating) {
     book.setRating(rating);
   }

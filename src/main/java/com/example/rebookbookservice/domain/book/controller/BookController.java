@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequiredArgsConstructor
@@ -64,6 +65,13 @@ public class BookController {
   public ResponseEntity<SuccessResponse<PageResponse<BookResponse>>> search(
       @RequestParam String keyword, @PageableDefault Pageable pageable) {
     return SuccessResponse.toOk(bookService.searchBooks(keyword, pageable));
+  }
+
+  @PostMapping("/search/image")
+  public ResponseEntity<SuccessResponse<List<BookResponse>>> searchByImage(
+      @PassportUser String userId, @RequestParam("image") MultipartFile image)
+      throws JsonProcessingException {
+    return SuccessResponse.toOk(bookService.searchBooksByImage(image, userId));
   }
 
   @GetMapping("/{bookId}")

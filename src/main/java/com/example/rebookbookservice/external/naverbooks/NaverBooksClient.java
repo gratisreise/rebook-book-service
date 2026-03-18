@@ -30,4 +30,17 @@ public class NaverBooksClient {
         .retrieve()
         .body(NaverBooksResponse.class);
   }
+
+  public NaverBooksResponse searchBooksByIsbn(String isbn, int display) {
+    return restClient
+        .get()
+        .uri(
+            NAVER_BOOK_API_URL,
+            uriBuilder ->
+                uriBuilder.queryParam("query", isbn).queryParam("display", display).build())
+        .header("X-Naver-Client-Id", clientId)
+        .header("X-Naver-Client-Secret", clientSecret)
+        .retrieve()
+        .body(NaverBooksResponse.class);
+  }
 }
