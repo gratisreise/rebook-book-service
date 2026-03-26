@@ -162,83 +162,15 @@
 
 ## 5. 아키텍처
 
-### 5.1 마이크로서비스 아키텍처
+### AI 이미디 도서추출
+![이미지도서추출](~~~)
 
-```
-┌─────────────────┐
-│  API Gateway    │ ← 인증 및 라우팅 (X-User-Id 헤더 주입)
-└────────┬────────┘
-         │
-         ├──────────────┬──────────────┬──────────────┐
-         │              │              │              │
-    ┌────▼────┐    ┌────▼────┐   ┌────▼────┐    ┌────▼────┐
-    │  Book   │    │ Trading │   │  User   │    │ Notif.  │
-    │ Service │───►│ Service │   │ Service │    │ Service │
-    └────┬────┘    └─────────┘   └────▲────┘    └────▲────┘
-         │         (OpenFeign)         │              │
-         │                             │              │
-         │         ┌──────────────┐    │              │
-         └────────►│  RabbitMQ    │────┴──────────────┘
-                   │  (AMQP)      │  (Notification Events)
-                   └──────────────┘
-
-    ┌─────────────────────────────────────────────┐
-    │        Infrastructure Services              │
-    ├─────────────────────────────────────────────┤
-    │  Eureka  │  Config Server  │  PostgreSQL   │
-    │  Redis   │  Naver API      │  Gemini AI   │
-    └─────────────────────────────────────────────┘
-```
-
-
-### 5.2 엔티티 관계도 (ERD)
-
-```
-┌─────────────────────────────┐
-│        Book                 │
-├─────────────────────────────┤
-│ PK  id (Long)               │
-│     isbn (String)           │
-│     title (String)          │
-│     author (String)         │
-│     publisher (String)      │
-│     category (String)       │
-│     imageUrl (String)       │
-│     description (String)    │
-│     createdAt (LocalDateTime)│
-│     updatedAt (LocalDateTime)│
-└─────────────────────────────┘
-              │
-              ├──────────────┐
-              │              │
-              │ 1:N          │ 1:N
-              │              │
-              ▼              ▼
-┌─────────────────────────────┐    ┌─────────────────────────────┐
-│      BookReview             │    │      BookMark               │
-├─────────────────────────────┤    ├─────────────────────────────┤
-│ PK  id (Long)               │    │ PK  userId (String)         │ ← Composite Key
-│     bookId (Long)           │    │ PK  bookId (Long)           │ ← Composite Key
-│     userId (String)         │    │     createdAt (LocalDateTime)│
-│     rating (Integer)        │    └─────────────────────────────┘
-│     content (String)        │
-│     createdAt (LocalDateTime)│
-│     updatedAt (LocalDateTime)│
-└─────────────────────────────┘
-```
-**엔티티 설계 패턴**:
-- **JPA Auditing**: `@EntityListeners(AuditingEntityListener.class)`로 생성/수정 시간 자동 관리
-- **복합키 (Composite Key)**: `BookMarkId` 임베디드 클래스로 사용자-도서 다대다 관계 표현
-- **인덱싱**: ISBN, 제목, 저자, 카테고리에 대한 검색 최적화
-
-
-### 5.3 도서저장흐름
+### 도서등록
 ![도서저장](https://rebook-bucket.s3.ap-northeast-2.amazonaws.com/rebook/book_save.png)
-
 
 ## 6. API 문서
 
-### 6.1 Swagger UI 접근
+### 6.1 Apidog 접근
 
 
 ### 6.1 API 엔드포인트 상세
@@ -279,22 +211,6 @@
 
 
 ## 7. 프로젝트 구조
-
-### 주요 디렉토리 설명
-
-| 디렉토리 | 역할 | 주요 기능 |
-|---------|------|----------|
-| **advice/** | 전역 예외 처리 | `@RestControllerAdvice`로 모든 컨트롤러 예외 통합 핸들링 |
-| **common/** | 응답 표준화 | 통일된 API 응답 구조 제공 (`CommonResult`, `SingleResult`, `ListResult`) |
-| **config/** | 인프라 설정 | RabbitMQ, Swagger 등 외부 서비스 연동 설정 |
-| **controller/** | REST API | 엔드포인트 정의 및 Swagger 문서화 (`@Tag`, `@Operation`) |
-| **model/entity/** | 엔티티 모델 | JPA 엔티티 및 복합키 정의 |
-| **model/** (DTO) | 데이터 전송 | 요청/응답 DTO, Naver/User 연동 모델, 메시징 DTO |
-| **utils/** | 유틸리티 | 메시지 발행 등 공통 유틸리티 |
-| **exception/** | 커스텀 예외 | 도메인별 예외 클래스 (404, 409, 403, 400) |
-| **feigns/** | 서비스 간 통신 | OpenFeign을 통한 User Service, Naver API 동기 호출 |
-| **repository/** | 데이터 접근 | Spring Data JPA 리포지토리 인터페이스 |
-| **service/** | 비즈니스 로직 | 트랜잭션 관리, 권한 검증, 외부 서비스 연동 |
 
 ### 구조
 ```
