@@ -35,17 +35,12 @@ public class GeminiService {
     return parseJson(rawResponse, clazz);
   }
 
-
   // --- [Private] ---
 
-  //텍스트
+  // 텍스트
   private String executeApi(String prompt) {
-    try{
-      GenerateContentResponse response = client.models.generateContent(
-          MODEL,
-          prompt,
-          null
-      );
+    try {
+      GenerateContentResponse response = client.models.generateContent(MODEL, prompt, null);
 
       String resultText = response.text();
       if (resultText == null) {
@@ -71,11 +66,8 @@ public class GeminiService {
         }
       }
 
-      GenerateContentResponse response = client.models.generateContent(
-          MODEL,
-          Content.fromParts(parts.toArray(Part[]::new)),
-          null
-      );
+      GenerateContentResponse response =
+          client.models.generateContent(MODEL, Content.fromParts(parts.toArray(Part[]::new)), null);
 
       String resultText = response.text();
       if (resultText == null) throw new BusinessException(ErrorCode.EXTERNAL_API_ERROR);
@@ -86,8 +78,6 @@ public class GeminiService {
       throw new BusinessException(ErrorCode.EXTERNAL_API_ERROR);
     }
   }
-
-
 
   private <T> T parseJson(String json, Class<T> clazz) {
     String cleanedJson = json.replaceAll("```json|```", "").trim();

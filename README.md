@@ -1,242 +1,145 @@
 # Rebook Book Service
 
-<div align="center">
+[![Java 17](https://img.shields.io/badge/Java-17-orange.svg)](https://openjdk.org/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3-brightgreen.svg)](https://spring.io/projects/spring-boot)
+[![Gradle](https://img.shields.io/badge/Gradle-8.x-blue.svg)](https://gradle.org/)
 
-![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.3.13-brightgreen)
-![Spring Cloud](https://img.shields.io/badge/Spring%20Cloud-2023.0.5-blue)
-![Java](https://img.shields.io/badge/Java-17-orange)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-13+-336791)
-![Redis](https://img.shields.io/badge/Redis-6+-DC382D)
-![RabbitMQ](https://img.shields.io/badge/RabbitMQ-3.x-FF6600)
-![Gradle](https://img.shields.io/badge/Gradle-8.14.2-02303A)
+Rebook 플랫폼의 도서 관리 마이크로서비스입니다. 도서 검색, 등록, AI 기반 자동 카테고리 분류, 이미지 검색, 리뷰, 북마크, 추천 기능을 제공합니다.
 
-**Rebook 마이크로서비스 아키텍처의 도서 관리 서비스**
+## 목차
 
-도서 검색, 등록, 추천, 리뷰, 북마크 기능을 제공하는 핵심 비즈니스 서비스
-
-</div>
+- [아키텍처](#아키텍처)
+- [기능](#기능)
+- [기술 스택](#기술-스택)
+- [API 문서](#api-문서)
+- [프로젝트 구조](#프로젝트-구조)
 
 ---
 
-## 1. 개요
+## 아키텍처
 
-**Rebook Book Service**는 중고 도서 거래 플랫폼 Rebook의 핵심 백엔드 마이크로서비스로, 도서 정보를 관리하고 사용자에게 개인화된 경험을 제공합니다. Spring Boot 기반으로 구현된 본 서비스는 **서비스 디스커버리**, **중앙화된 설정 관리**, **비동기 메시징**을 통한 확장 가능한 구조를 제공합니다.
-
-
-### 서비스 역할
-
-본 서비스는 Rebook 플랫폼 내에서 다음과 같은 역할을 담당합니다:
-
-- **도서 관리**: 도서 정보 등록, 조회, 검색 및 메타데이터 관리
-- **외부 API 통합**: Naver Books API를 통한 외부 도서 검색
-- **AI 기반 분류**: Gemini AI를 활용한 자동 카테고리 분류
-- **리뷰 시스템**: 사용자 리뷰 및 평점 관리
-- **북마크 기능**: 사용자별 관심 도서 북마킹
-- **추천 시스템**: User Service 연동을 통한 개인화 도서 추천
-- **알림 발행**: RabbitMQ를 통한 신규 도서 등록 알림 전송
+- AI 이미지 도서추출
+  ![이미지로검색](https://diagrams-noaahh.s3.ap-northeast-2.amazonaws.com/book_searchbyimage.png)
+- 도서등록 
 
 ---
 
-## 2. 목차
+## 기능
 
-- [주요 기능](#3-주요-기능)
-- [기술 스택](#4-기술-스택)
-- [아키텍처](#5-아키텍처)
-- [API 문서](#6-api-문서)
-- [프로젝트 구조](#7-프로젝트-구조)
+### AI 기능
+
+| 기능 | 설명 | 활용 |
+|------|------|------|
+| 자동 카테고리 분류 | 도서 등록 시 제목 기반 자동 분류 | Gemini AI |
+| 이미지 도서 검색 | 표지 이미지에서 ISBN 추출 후 검색 | Gemini AI + Naver Books API |
+
+### 주요 기능
+
+- **도서 검색**: 키워드 기반 내부 검색 및 Naver Books API 연동 외부 검색
+- **도서 등록**: AI 자동 카테고리 분류, 신규 도서 알림 발행 (Outbox 패턴)
+- **북마크**: 도서 북마크 토글 및 북마크 목록 조회
+- **리뷰**: 도서 리뷰 CRUD 및 평점 관리
+- **추천**: 사용자 관심 카테고리 기반 개인화 도서 추천
+- **알림**: 신규 도서 등록 시 관심 카테고리 사용자에게 RabbitMQ 알림 발행
 
 ---
 
-## 3. 주요 기능
+## 기술 스택
 
-### 3.1 도서 관리
+### Language & Framework
+- **Java 17**, **Spring Boot 3.3**, **Spring Cloud 2023.0.5**
 
-#### 도서 검색 및 등록
-- ✅ Naver Books API를 통한 외부 도서 검색
-- ✅ 신규 도서 등록 (ISBN, 제목, 저자, 출판사 등)
-- ✅ Gemini AI 기반 자동 카테고리 분류
-- ✅ 도서 메타데이터 관리 (이미지, 설명 등)
+### Database
+- **PostgreSQL**, **QueryDSL 7.1**, **Spring Data JPA**
 
-#### 도서 조회
-- ✅ 도서 상세 정보 조회 (북마크 상태 포함)
-- ✅ 도서 목록 조회 (페이지네이션 지원)
-- ✅ 키워드 기반 도서 검색
-- ✅ 사용자 맞춤 도서 추천 (User Service 연동)
+### Messaging
+- **RabbitMQ** (AMQP) — 도서 등록 알림 메시지 비동기 처리 (Outbox 패턴)
 
-### 3.2 리뷰 시스템
+### AI & External API
+- **Google Gemini** (`gemini-2.5-flash`) — 도서 카테고리 자동 분류, 이미지 ISBN 추출
+- **Naver Books API** — 외부 도서 검색
 
-- ✅ 도서 리뷰 작성 및 평점 등록
-- ✅ 도서 리뷰 수정 및 삭제 (작성자 권한 검증)
-- ✅ 특정 도서의 리뷰 목록 조회 (페이지네이션 지원)
-- ✅ User Service 연동을 통한 리뷰 작성자 정보 표시
+### Cloud & Infra
+- **Spring Cloud Config** — 중앙 설정 관리
+- **Eureka Client** — 서비스 디스커버리
+- **OpenFeign** — 서비스 간 통신 (user-service)
+- **AWS S3** — 이미지 스토리지
 
-### 3.3 북마크 시스템
+### Monitoring & Docs
+- **Actuator**, **Prometheus**, **Sentry**
+- **SpringDoc OpenAPI** (Swagger UI)
 
-- ✅ 도서 북마크 추가/삭제 토글 기능 (중복 방지)
-- ✅ 내 북마크 목록 조회 (페이지네이션 지원)
-- ✅ 도서 조회 시 현재 사용자의 북마크 상태 표시
-- ✅ 복합키(Composite Key) 기반 효율적인 북마크 관리 (userId + bookId)
-
-### 3.4 추천 시스템
-
-- ✅ 사용자 맞춤 도서 추천
-- ✅ User Service와 OpenFeign 연동을 통한 개인화 추천
-- ✅ 사용자 선호도 기반 도서 필터링
-
-### 3.5 알림 시스템 (Event-Driven)
-
-- ✅ 신규 도서 등록 시 관심 카테고리 사용자에게 알림 발행
-- ✅ RabbitMQ 기반 비동기 메시징 (Notification Service 연동)
-- ✅ JSON 메시지 직렬화를 통한 안정적 메시지 전송
-
+### Build & Deploy
+- **Gradle**, **Docker**, **GitHub Actions** (CI/CD)
 
 ---
 
-## 4. 기술 스택
+## API 문서
 
-### 4.1 백엔드 프레임워크
+Apidog에서 확인하실 수 있습니다:
 
-| 기술 | 버전 | 용도 |
-|------|------|------|
-| **Spring Boot** | 3.3.13 | 애플리케이션 프레임워크 |
-| **Java** | 17 | 프로그래밍 언어 |
-| **Spring Data JPA** | - | ORM 및 데이터 접근 계층 |
-| **Spring Validation** | - | 요청 데이터 유효성 검증 |
-| **Lombok** | - | 보일러플레이트 코드 제거 |
-
-### 4.2 데이터베이스 & 캐싱
-
-| 기술 | 버전 | 용도 |
-|------|------|------|
-| **PostgreSQL** | 13+ | 관계형 데이터베이스 (메인 데이터 저장소) |
-| **Redis** | 6+ | 분산 캐싱 및 세션 관리 |
-
-### 4.3 마이크로서비스 인프라 (Spring Cloud)
-
-| 기술 | 버전 | 용도 |
-|------|------|------|
-| **Eureka Client** | 2023.0.5 | 서비스 디스커버리 및 등록 |
-| **Spring Cloud Config** | 2023.0.5 | 중앙화된 설정 관리 (외부 Config Server) |
-| **OpenFeign** | 2023.0.5 | 선언적 HTTP 클라이언트 (User Service, Naver API 연동) |
-
-### 4.4 메시징 & 이벤트
-
-| 기술 | 버전 | 용도 |
-|------|------|------|
-| **RabbitMQ (AMQP)** | 3.x | 비동기 메시징 및 이벤트 발행 |
-| **Spring AMQP** | - | RabbitMQ 통합 및 메시지 컨버터 |
-
-### 4.5 외부 API 통합
-
-| 기술 | 버전 | 용도 |
-|------|------|------|
-| **Naver Books API** | - | 외부 도서 검색 (OpenFeign 기반) |
-| **Gemini AI** | 1.0.0 | 자동 카테고리 분류 (7개 카테고리) |
-| **AWS SDK S3** | 2.27.21 | 도서 이미지 저장 (의존성만 포함) |
-
-### 4.6 모니터링 & 로깅
-
-| 기술 | 버전 | 용도 |
-|------|------|------|
-| **Spring Actuator** | - | 헬스체크 및 메트릭 엔드포인트 |
-| **Prometheus** | - | 메트릭 수집 및 모니터링 |
-| **Sentry** | 8.13.2 | 실시간 에러 트래킹 및 알림 |
-| **SLF4J & Logback** | - | 애플리케이션 로깅 |
-
-### 4.7 API 문서화
-
-| 기술 | 버전 | 용도 |
-|------|------|------|
-| **SpringDoc OpenAPI 3** | 2.6.0 | Swagger UI 기반 REST API 문서 자동 생성 |
-
-### 4.8 빌드 & 배포
-
-| 기술 | 버전 | 용도 |
-|------|------|------|
-| **Gradle** | 8.14.2 | 빌드 자동화 도구 |
-| **Docker** | - | 컨테이너화 및 배포 |
-| **Jacoco** | - | 테스트 커버리지 분석 |
-| **JUnit 5** | - | 단위 테스트 프레임워크 |
-
----
-
-## 5. 아키텍처
-
-### AI 이미디 도서추출
-![이미지도서추출](~~~)
-
-### 도서등록
-![도서저장](https://rebook-bucket.s3.ap-northeast-2.amazonaws.com/rebook/book_save.png)
-
-## 6. API 문서
-
-### 6.1 Apidog 접근
-
-
-### 6.1 API 엔드포인트 상세
-
-#### 6.1.1 도서 관리 API (`BookController`)
-
-| Method | Endpoint | Summary |
-|--------|----------|---------|
-| **GET** | `/api/books/external/search` | 네이버 API 도서 검색 |
-| **POST** | `/api/books` | 신규 도서 등록 |
-| **GET** | `/api/books` | 도서 목록 조회 (페이징) |
-| **GET** | `/api/books/search` | 키워드 기반 도서 검색 |
-| **GET** | `/api/books/{bookId}` | 도서 상세 정보 조회 |
-| **GET** | `/api/books/recommendations` | 맞춤 추천 도서 조회 |
-
-#### 6.1.2 리뷰 관리 API (`BookReviewController`)
-
-| Method | Endpoint | Summary |
-|--------|----------|---------|
-| **POST** | `/api/books/{bookId}/reviews` | 도서 리뷰 작성 |
-| **PUT** | `/api/books/{bookId}/reviews/{reviewId}` | 도서 리뷰 수정 |
-| **DELETE** | `/api/books/{bookId}/reviews/{reviewId}` | 도서 리뷰 삭제 |
-| **GET** | `/api/books/{bookId}/reviews` | 특정 도서 리뷰 조회 (페이징) |
-
-#### 6.1.3 북마크 관리 API (`BookMarkController`)
-
-| Method | Endpoint | Summary |
-|--------|----------|---------|
-| **POST** | `/api/books/{bookId}/marks` | 북마크 추가/삭제 (토글) |
-| **GET** | `/api/books/marks` | 내 북마크 목록 조회 (페이징) |
-
-#### 6..4 내부 서비스 통신 API
-
-| Method | Endpoint | Summary | 용도 |
-|--------|----------|---------|------|
-| **GET** | `/api/books/recommendations/{userId}` | 추천 도서 ID 목록 조회 | Trading Service 연동 |
-| **GET** | `/alarms/books/{bookId}` | 도서 찜한 사용자 ID 목록 조회 | Notification Service 연동 |
-
-
-## 7. 프로젝트 구조
-
-### 구조
 ```
-rebook-book-service/
-├── src/main/java/com/example/rebookbookservice/
-│   ├── advice/                 # 전역 예외 처리
-│   ├── common/                 # 공통 응답 모델
-│   ├── config/                 # RabbitMQ, Swagger 설정
-│   ├── controller/             # REST API 엔드포인트
-│   ├── exception/              # 커스텀 예외 클래스
-│   ├── feigns/                 # Naver API, User Service 연동
-│   ├── model/
-│   │   ├── entity/            # JPA 엔티티 (Book, BookReview, BookMark)
-│   │   ├── naver/             # Naver API DTO
-│   │   ├── user/              # User Service DTO
-│   │   └── message/           # RabbitMQ 메시징 DTO
-│   ├── repository/             # Spring Data JPA 리포지토리
-│   ├── service/                # 비즈니스 로직 및 Reader 계층
-│   └── utils/                  # NotificationPublisher 등 유틸리티
-│
-├── src/main/resources/
-│   ├── application.yaml        # Spring Cloud Config 연동
-│   ├── application-dev.yaml    # 개발 환경 설정
-│   └── application-prod.yaml   # 운영 환경 설정
-│
-├── build.gradle                # Gradle 빌드 스크립트
-├── Dockerfile                  # Docker 이미지 빌드
-└── README.md                   # 프로젝트 문서
+https://x6wq8qo61i.apidog.io/
+```
+
+### Books
+
+| Method | Endpoint | 설명 |
+|--------|----------|------|
+| `GET` | `/api/books` | 도서 목록 조회 (페이지네이션) |
+| `GET` | `/api/books/{bookId}` | 도서 상세 조회 (북마크 여부 포함) |
+| `GET` | `/api/books/search?keyword=` | 키워드 도서 검색 |
+| `GET` | `/api/books/external/search?keyword=` | Naver Books 외부 검색 |
+| `POST` | `/api/books` | 도서 등록 (AI 자동 카테고리 분류) |
+| `POST` | `/api/books/search/image` | 이미지로 도서 검색 (Gemini ISBN 추출) |
+| `GET` | `/api/books/recommendations` | 개인화 도서 추천 |
+
+### Bookmarks
+
+| Method | Endpoint | 설명 |
+|--------|----------|------|
+| `POST` | `/api/books/{bookId}/marks` | 북마크 토글 |
+| `GET` | `/api/books/marks` | 북마크 목록 조회 |
+
+### Reviews
+
+| Method | Endpoint | 설명 |
+|--------|----------|------|
+| `POST` | `/api/books/{bookId}/reviews` | 리뷰 작성 |
+| `PUT` | `/api/books/{bookId}/reviews/{reviewId}` | 리뷰 수정 |
+| `DELETE` | `/api/books/{bookId}/reviews/{reviewId}` | 리뷰 삭제 |
+| `GET` | `/api/books/{bookId}/reviews` | 리뷰 목록 조회 |
+
+### Internal (서비스 간 통신)
+
+| Method | Endpoint | 설명 |
+|--------|----------|------|
+| `GET` | `/internal/books/recommendations/{userId}` | 사용자 추천 도서 ID 목록 |
+| `GET` | `/internal/books/alarms/books/{bookId}` | 도서 북마크 사용자 ID 목록 |
+
+---
+
+## 프로젝트 구조
+
+```
+src/main/java/.../
+├── clientfeign/              # 외부 서비스 통신 (UserClient)
+│   └── user/
+├── common/
+│   ├── enums/                # Category, MessageStatus
+│   └── exception/            # BookException
+├── config/                   # Web, Schedule 설정
+├── domain/
+│   ├── book/
+│   │   ├── controller/       # REST API (BookController, InternalController)
+│   │   ├── model/
+│   │   │   ├── dto/          # Request/Response DTO
+│   │   │   └── entity/       # Book, BookMark, BookReview
+│   │   ├── repository/       # JPA Repository
+│   │   └── service/          # 비즈니스 로직 (reader/writer 분리)
+│   └── outbox/               # Outbox 패턴 엔티티
+└── external/
+    ├── gemini/               # Gemini AI 연동 (카테고리 분류, 이미지 분석)
+    ├── naverbooks/           # Naver Books API 클라이언트
+    └── rabbitmq/             # 메시지 발행 (Outbox 기반 알림)
 ```
