@@ -220,7 +220,8 @@ public class BookService {
     }
   }
 
-  private Book processBookByIsbnCandidates(List<String> isbnCandidates) throws JsonProcessingException {
+  private Book processBookByIsbnCandidates(List<String> isbnCandidates)
+      throws JsonProcessingException {
     // ISBN 후보군을 순차적으로 시도
     for (String isbn : isbnCandidates) {
       Book book = processBookByIsbn(isbn);

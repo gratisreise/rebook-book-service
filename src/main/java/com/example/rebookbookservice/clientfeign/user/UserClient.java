@@ -9,14 +9,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
-@FeignClient(name = "user-service")
+@FeignClient(name = "user-service", path = "/internal/users")
 public interface UserClient {
-  @PostMapping("/internal/users/authors")
+  @PostMapping("/authors")
   List<String> getUser(@RequestBody AuthorsRequest request);
 
-  @GetMapping("/api/users/categories/recommendations/{userId}")
+  @GetMapping("/categories/recommendations/{userId}")
   List<String> getFavoriteCategories(@PathVariable String userId);
 
-  @GetMapping("/api/users/categories/favorites")
+  @GetMapping("/categories/favorites")
   List<String> getUserByCategory(@RequestParam String category);
 }
